@@ -1,0 +1,50 @@
+---
+- name: Install Docker
+  hosts: webservers
+  tasks:
+    - name: Check docker process is present
+      apt:
+        name: docker
+        state: present
+
+    - name: Update all packages
+      apt: update-cache=yes
+
+    - name: Installing required packages
+      apt:
+        name:
+          - "apt-transport-https"
+          - "ca-certificates"
+          - "curl"
+          - "software-properties-common"
+        state: present
+
+    - name: Add GPG Key
+      ansible.builtin.raw: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+
+    - name: Add Docker Repo
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Check docker process post-install
+      apt:
+        name: docker
+        state: present
+
+    - name: Add user nish to docker group
+      user:
+        name: nish
+        groups: docker
+        append: true
+
+    - name: Pull Docker compose file
+      ansible.builtin.raw: 'sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
+
+    - name: change execute persmissions to docker-compose
+      ansible.builtin.raw: "sudo chmod +x /usr/local/bin/docker-compose"
