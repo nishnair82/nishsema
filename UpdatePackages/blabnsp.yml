@@ -1,6 +1,6 @@
 ---
 - name: Update packages on Ubuntu
-  hosts: wblabnsp
+  hosts: blabnsp
   connection: local
   become: yes
   tasks:
