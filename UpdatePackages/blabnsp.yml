@@ -2,12 +2,10 @@
 - name: Update packages on Ubuntu
   hosts: 127.0.0.1
   connection: local
-  become: yes  # Run tasks as sudo
+  become: yes
   tasks:
-    - name: Update the apt cache
-      ansible.builtin.apt:
-        update_cache: yes
+    - name: Update all packages
+      apt: update-cache=yes
 
-    - name: Upgrade all packages
-      ansible.builtin.apt:
-        upgrade: dist
+    - name: Upgrade all apt packages
+      apt: state=latest force_apt_get=yes
