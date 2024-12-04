@@ -1,0 +1,12 @@
+---
+- name: Update packages on Ubuntu
+  hosts: webservers
+  become: yes  # Run tasks as sudo
+  tasks:
+    - name: Update the apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Upgrade all packages
+      ansible.builtin.apt:
+        upgrade: dist

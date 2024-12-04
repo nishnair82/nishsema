@@ -1,13 +1,18 @@
 ---
 - name: Install Docker
   hosts: webservers
-  become: true
-  become_user: root
+  # become: true
+  # become_user: root
   tasks:
     - name: Check docker process is present
-      apt:
-        name: docker
-        state: present
+      ansible.builtin.command: which docker
+      register: docker_check
+      ignore_errors: true
+
+    - name: Stop the play if Docker is present
+      ansible.builtin.meta: end_play
+      when: docker_check.rc == 0
+
 
     - name: Update all packages
       apt: update-cache=yes
@@ -38,7 +43,7 @@
       apt:
         name: docker
         state: present
-
+    
     - name: Add user nish to docker group
       user:
         name: nish
